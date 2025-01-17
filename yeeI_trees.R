@@ -112,9 +112,18 @@ test = df_GCF_nc_compressed %>%
 
 sum(test$yeeI | test$yrbC)
 
+test %>% group_by(yeeI, yrbC) %>% summarize(number_genomes = n(), perc = n()/15259)
 
 summary = df_GCF_nc_compressed %>% 
   group_by(phylum) %>%
   summarize(n = n(), yeeI = sum(yeeI), yrbC = sum(yrbC), yeeI_prop = round((sum(yeeI)/n())*100, 3), yrbC_prop = round((sum(yrbC)/n())*100, 3))
 
 write_csv(summary, "yeeI_yrbC_by_phylum.csv")
+
+# Table S1
+
+TableS1 = df_GCF_nc_compressed %>%
+  unite(col = taxonomy, c('organism', 'domain', 'phylum', 'class', 'order', 'family', 'genus', 'species'), sep = ";") %>%
+  select(assembly, yeeI, yrbC, organism.taxId, checkmInfo.contamination, checkmInfo.completeness, taxonomy) 
+
+write.csv(TableS1, "C:/Users/cassp/Cornell University/Heather Feaga - Hye-Rim YeeI manuscript/species_and_gene_counts.csv")
